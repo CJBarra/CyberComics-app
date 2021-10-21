@@ -1,0 +1,20 @@
+.header {
+  display: block;
+}
+.header .header--menu span {
+  display: block;
+  width: 30px;
+  height: 3px;
+  background-color: var(--blue-dark);
+}
+.header .header--menu span:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.header--wrapper a {
+  text-decoration: none;
+}
+
+.navbar {
+  padding: 16px 24px;
+}

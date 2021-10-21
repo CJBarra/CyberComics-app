@@ -1,0 +1,21 @@
+.content-container .content--wrapper {
+  margin-top: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin: 0 auto;
+}
+.content-controller {
+  padding: 20px 0;
+}
+.content-img {
+  text-align: center;
+}
+.ciw {
+  position: relative;
+  padding: 16px;
+  margin: 16px 0;
+  background-color: var(--bg-lightgray);
+}
+.ciw .img-fluid{
+    width: 100%;
+}
