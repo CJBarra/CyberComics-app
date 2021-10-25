@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Case study pulling in xkcd.com API to a single page website">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./app/style.css" />
     <title>Cyber City Comics</title>
@@ -28,21 +29,20 @@
         <div class="content--wrapper flex flex-w flex-jc-c" id='content-wrap'>
           <div class="content-controller flex flex-jc-c">
             <div class="content-controller--pagination" id="ccp">
-              <!-- <button id="btn-first" class="btn">&lang;&lang; First</button> -->
               <button id="btn-prev" class="btn">&lang; Prev</button>
               <button id="btn-random" class="btn">Random</button>
               <button id="btn-next" class="btn">Next &rang;</button>
-              <!-- <button id="btn-last" class="btn">Last &rang;&rang;</button> -->
             </div>
           </div>
 
-          <div class="content-img flex flex-w flex-ai-c">
+          <div class="loader" id="loader"></div>
+          <div class="content-img flex flex-w flex-ai-c" id="content-canvas">
             <div class="content-img--title cit" id="cit">
               <h1 class="title-fluid" id="img-title"></h1>
               <span id="img-date" class="content-img--date"></span>
             </div>
             <div class="content-img--wrap ciw" id="ciw">
-              <img class="img-fluid" id="img-loader" />
+              <img class="img-fluid" id="img-src" />
             </div>
             <button href="img-transcript" class="collapsible" id='script-collapse'>View Transcript... </button>
             <div class="content-img--script cis" id="cis">

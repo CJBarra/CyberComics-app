@@ -8,18 +8,6 @@
 // URLs, post dates, transcripts (when available), and other metadata. 
 */
 
-const controls = {
-  next: document.getElementById("btn-next"),
-  prev: document.getElementById("btn-prev"),
-  random: document.getElementById("btn-random"),
-  first: document.getElementById("btn-first"),
-  last: document.getElementById("btn-last"),
-  btn_collapse: document.getElementById("script-collapse"),
-};
-
-// Regular expression used to format sound effects in transcript
-const regex = /(?:<<|>>)/gim;
-
 // Here is the Controller class for making requests to the API.
 // API_URL and FORMAT required separating to account for queries
 // involving specific IDs of comics.
@@ -35,9 +23,19 @@ class RequestAPI {
     this.API_URL_FORMAT = "info.0.json";
     this.MAX_ID_NUM = 0; // indicates the max number of comics in json
     this.CURRENT_ID = 0; // grabs the current displayed comic id number
+    this.REGEX = /(?:<<|>>)/gim; // Regular expression used to format sound effects in transcript
+
+    this.controls = {
+      next: document.getElementById("btn-next"),
+      prev: document.getElementById("btn-prev"),
+      random: document.getElementById("btn-random"),
+      btn_collapse: document.getElementById("script-collapse"),
+    };
 
     this.image_context = {
-      image_loader: document.getElementById("img-loader"),
+      loader: document.getElementById("loader"),
+      image_canvas: document.getElementById("content-canvas"),
+      image_source: document.getElementById("img-src"),
       image_title: document.getElementById("img-title"),
       image_date: document.getElementById("img-date"),
       image_transcript: document.getElementById("img-transcript"),
@@ -49,18 +47,18 @@ class RequestAPI {
 
   // Event Manager for content navigation controllers, aka buttons.
   eventManager() {
-    controls.random.addEventListener("click", () =>
+    this.controls.random.addEventListener("click", () =>
       this.getContentById(this.getRandomId())
     );
-    controls.prev.addEventListener("click", () =>
+    this.controls.prev.addEventListener("click", () =>
       this.getContentById(this.CURRENT_ID - 1)
     );
-    controls.next.addEventListener("click", () =>
+    this.controls.next.addEventListener("click", () =>
       this.getContentById(this.CURRENT_ID + 1)
     );
 
-    controls.btn_collapse.addEventListener("click", () => {
-      controls.btn_collapse.classList.toggle("active");
+    this.controls.btn_collapse.addEventListener("click", () => {
+      this.controls.btn_collapse.classList.toggle("active");
 
       var context = this.image_context.image_transcript;
       if (context.style.maxHeight) {
@@ -80,29 +78,32 @@ class RequestAPI {
       .then(ResponseStatus)
       .then(json)
       .then((data) => {
-        this.setCurrentIdNumber(data.num);
-        this.setMaxIdNumber(data.num);
-
         this.image_context.image_title.innerHTML = `${data.safe_title}`;
         this.image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
 
-        this.image_context.image_loader.setAttribute("src", `${data.img}`);
-        this.image_context.image_loader.setAttribute("alt", `${data.alt}`);
+        this.image_context.image_source.setAttribute("src", `${data.img}`);
+        this.image_context.image_source.setAttribute("alt", `${data.alt}`);
 
         var length = `${data.transcript}`.length;
 
         if (length > 0) {
           this.image_context.image_transcript.innerHTML = `${data.transcript.replace(
-            regex,
+            this.REGEX,
             " * "
           )}`;
         } else {
           this.image_context.image_transcript.innerHTML = `<p>Sorry, we don't have a transcript for that one yet.</p>`;
         }
+        this.setCurrentIdNumber(data.num);
+        this.setMaxIdNumber(data.num);
+
+        this.image_context.image_canvas.classList.add("flex");
       })
       .catch((err) => {
         console.log("Error occured while loading image..", err);
       });
+
+      this.image_context.loader.classList.add('d-none');
   }
 
   // GETS
@@ -117,14 +118,14 @@ class RequestAPI {
         this.image_context.image_title.innerHTML = `${data.safe_title}`;
         this.image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
 
-        this.image_context.image_loader.setAttribute("src", `${data.img}`);
-        this.image_context.image_loader.setAttribute("alt", `${data.alt}`);
+        this.image_context.image_source.setAttribute("src", `${data.img}`);
+        this.image_context.image_source.setAttribute("alt", `${data.alt}`);
 
         var length = `${data.transcript}`.length;
 
         if (length > 0) {
           this.image_context.image_transcript.innerHTML = `${data.transcript.replace(
-            regex,
+            this.REGEX,
             " * "
           )}`;
         } else {
@@ -132,7 +133,6 @@ class RequestAPI {
         }
 
         this.setCurrentIdNumber(data.num);
-        console.log(JSON.stringify(data));
       })
       .catch((err) => {
         console.log("Error occured while loading image..", err);
@@ -169,18 +169,3 @@ function json(res) {
 }
 
 const requestOnLoad = new RequestAPI();
-
-// var coll = document.getElementsByClassName("collapsible");
-// var i;
-
-// for (i = 0; i < coll.length; i++) {
-//   coll[i].addEventListener("click", function() {
-//     this.classList.toggle("active");
-//     var content = this.nextElementSibling;
-//     if (content.style.maxHeight){
-//       content.style.maxHeight = null;
-//     } else {
-//       content.style.maxHeight = content.scrollHeight + "px";
-//     }
-//   });
-// }
