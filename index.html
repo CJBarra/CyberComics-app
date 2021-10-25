@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./app/style.css" />
     <title>Cyber City Comics</title>
   </head>
   <body>
@@ -23,10 +23,9 @@
           </div>
         </div>
       </div>
-      
+
       <div class="content-container">
-        <div class="content--wrapper ">
-          
+        <div class="content--wrapper flex flex-w flex-jc-c" id='content-wrap'>
           <div class="content-controller flex flex-jc-c">
             <div class="content-controller--pagination" id="ccp">
               <!-- <button id="btn-first" class="btn">&lang;&lang; First</button> -->
@@ -36,25 +35,24 @@
               <!-- <button id="btn-last" class="btn">Last &rang;&rang;</button> -->
             </div>
           </div>
-          
-          <div class="content-img flex flex-jc-c flex-dir-c flex-ai-c">
+
+          <div class="content-img flex flex-w flex-ai-c">
             <div class="content-img--title cit" id="cit">
-              <h1 class='title-fluid' id='img-title'></h1>
-              <!-- Comic img displayed here -->
+              <h1 class="title-fluid" id="img-title"></h1>
               <span id="img-date" class="content-img--date"></span>
             </div>
             <div class="content-img--wrap ciw" id="ciw">
-              <img class="img-fluid" id="img-loader">
+              <img class="img-fluid" id="img-loader" />
             </div>
+            <button href="img-transcript" class="collapsible" id='script-collapse'>View Transcript... </button>
             <div class="content-img--script cis" id="cis">
-              <pre class="img-transcript" id="img-transcript"></pre>
+              <pre class="img-transcript showContent" id="img-transcript"></pre>
             </div>
           </div>
-          
-          
-        </div><!-- content wrapper -->
+        </div>
+        <!-- content wrapper -->
       </div>
     </div>
   </body>
-  <script src="./js/script.js"></script>
+  <script src="app/js/script.js"></script>
 </html>

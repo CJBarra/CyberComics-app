@@ -7,14 +7,6 @@
 // Those files contain, in a plaintext and easily-parsed format: comic titles,
 // URLs, post dates, transcripts (when available), and other metadata. 
 */
-// PROXY SERVER: https://fierce-beach-79817.herokuapp.com/
-
-const image_context = {
-  image_loader: document.getElementById("img-loader"),
-  image_title: document.getElementById("img-title"),
-  image_date: document.getElementById("img-date"),
-  image_transcript: document.getElementById("img-transcript"),
-};
 
 const controls = {
   next: document.getElementById("btn-next"),
@@ -22,7 +14,11 @@ const controls = {
   random: document.getElementById("btn-random"),
   first: document.getElementById("btn-first"),
   last: document.getElementById("btn-last"),
+  btn_collapse: document.getElementById("script-collapse"),
 };
+
+// Regular expression used to format sound effects in transcript
+const regex = /(?:<<|>>)/gim;
 
 // Here is the Controller class for making requests to the API.
 // API_URL and FORMAT required separating to account for queries
@@ -33,16 +29,24 @@ const controls = {
 // '...//xkcd.com/1626/info.0.json' )
 class RequestAPI {
   constructor() {
-    this.CORS_PROXY = "https://fierce-beach-79817.herokuapp.com"; // needed to bypass CORS
+    // Heroku proxy server needed to bypass CORS
+    this.CORS_PROXY = "https://fierce-beach-79817.herokuapp.com";
     this.API_URL = "https://xkcd.com";
     this.API_URL_FORMAT = "info.0.json";
     this.MAX_ID_NUM = 0; // indicates the max number of comics in json
     this.CURRENT_ID = 0; // grabs the current displayed comic id number
 
+    this.image_context = {
+      image_loader: document.getElementById("img-loader"),
+      image_title: document.getElementById("img-title"),
+      image_date: document.getElementById("img-date"),
+      image_transcript: document.getElementById("img-transcript"),
+    };
+
     this.getLatestContent();
     this.eventManager();
   }
-  
+
   // Event Manager for content navigation controllers, aka buttons.
   eventManager() {
     controls.random.addEventListener("click", () =>
@@ -54,6 +58,17 @@ class RequestAPI {
     controls.next.addEventListener("click", () =>
       this.getContentById(this.CURRENT_ID + 1)
     );
+
+    controls.btn_collapse.addEventListener("click", () => {
+      controls.btn_collapse.classList.toggle("active");
+
+      var context = this.image_context.image_transcript;
+      if (context.style.maxHeight) {
+        context.style.maxHeight = null;
+      } else {
+        context.style.maxHeight = context.scrollHeight + "px";
+      }
+    });
   }
 
   // Initial Fetch to API on page load
@@ -68,17 +83,27 @@ class RequestAPI {
         this.setCurrentIdNumber(data.num);
         this.setMaxIdNumber(data.num);
 
-        image_context.image_title.innerHTML = `${data.safe_title}`;
-        image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
+        this.image_context.image_title.innerHTML = `${data.safe_title}`;
+        this.image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
 
-        image_context.image_loader.setAttribute("src", `${data.img}`);
-        image_context.image_loader.setAttribute("alt", `${data.alt}`);
+        this.image_context.image_loader.setAttribute("src", `${data.img}`);
+        this.image_context.image_loader.setAttribute("alt", `${data.alt}`);
+
+        var length = `${data.transcript}`.length;
+
+        if (length > 0) {
+          this.image_context.image_transcript.innerHTML = `${data.transcript.replace(
+            regex,
+            " * "
+          )}`;
+        } else {
+          this.image_context.image_transcript.innerHTML = `<p>Sorry, we don't have a transcript for that one yet.</p>`;
+        }
       })
       .catch((err) => {
         console.log("Error occured while loading image..", err);
       });
   }
-
 
   // GETS
   getContentById(id) {
@@ -89,15 +114,23 @@ class RequestAPI {
       .then(json)
       .then((data) => {
         // generate image content
-        image_context.image_title.innerHTML = `${data.safe_title}`;
-        image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
+        this.image_context.image_title.innerHTML = `${data.safe_title}`;
+        this.image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
 
-        image_context.image_loader.setAttribute("src", `${data.img}`);
-        image_context.image_loader.setAttribute("alt", `${data.alt}`);
+        this.image_context.image_loader.setAttribute("src", `${data.img}`);
+        this.image_context.image_loader.setAttribute("alt", `${data.alt}`);
 
-        const regex = /(?:<<|>>)/gmi; // Regular expression used to format sound effects in transcript
-        image_context.image_transcript.innerHTML = `${data.transcript.replace(regex, ' * ')}`; 
-        
+        var length = `${data.transcript}`.length;
+
+        if (length > 0) {
+          this.image_context.image_transcript.innerHTML = `${data.transcript.replace(
+            regex,
+            " * "
+          )}`;
+        } else {
+          this.image_context.image_transcript.innerHTML = `<p>Sorry, we don't have a transcript for that one yet.</p>`;
+        }
+
         this.setCurrentIdNumber(data.num);
         console.log(JSON.stringify(data));
       })
@@ -135,6 +168,19 @@ function json(res) {
   return res.json();
 }
 
-var ref = location.hostname;
-console.log(ref)
 const requestOnLoad = new RequestAPI();
+
+// var coll = document.getElementsByClassName("collapsible");
+// var i;
+
+// for (i = 0; i < coll.length; i++) {
+//   coll[i].addEventListener("click", function() {
+//     this.classList.toggle("active");
+//     var content = this.nextElementSibling;
+//     if (content.style.maxHeight){
+//       content.style.maxHeight = null;
+//     } else {
+//       content.style.maxHeight = content.scrollHeight + "px";
+//     }
+//   });
+// }

@@ -1,6 +1,8 @@
 html {
   font-size: 100%;
   box-sizing: border-box;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
 }
 
 *::before,
@@ -24,6 +26,9 @@ body {
 .flex {
   display: flex;
 }
+.flex-w{
+  flex-wrap: wrap;
+}
 .flex-jc-sb {
   justify-content: space-between;
 }
@@ -45,5 +50,17 @@ body {
   .content--wrapper {
     max-width: 1900px;
     margin: 0 auto;
+  }
+}
+
+@media (max-width: 992px) {
+  .cis{
+    padding: 0;
+  }
+  .cis .img-transcript{
+    width: 100%;
+  }
+  .content-controller{
+    width: 100% !important;
   }
 }
