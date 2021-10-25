@@ -16,7 +16,15 @@
 }
 
 .navbar {
+  font-family: 'Newsreader';
   padding: 0 24px;
   margin-bottom: 32px;
   border-bottom: 1px var(--bg-lightgray) solid;
+}
+
+.navbar h1 {
+  color: var(--dark);
+  font-size: 4rem;
+  margin: 0 auto;
+  text-align: center;
 }

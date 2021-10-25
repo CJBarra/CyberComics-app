@@ -1,7 +1,5 @@
 .content-container .content--wrapper {
   margin-top: 0;
-  padding-left: 16px;
-  padding-right: 16px;
   margin: 0 auto;
 }
 .content-controller {
@@ -13,15 +11,75 @@
   text-align: center;
   width: 80%;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 12px 0 20px;
+  border: 1px var(--bg-lightgray) inset;
+  background-color: var(--bg-paper);
+  filter: sepia(5%) grayscale(0) contrast(1) opacity(0.9);
 }
+.content-img::before {
+  border-top: 2px solid var(--dark);
+  content: "";
+  width: 90%;
+  height: 7px;
+  display: block;
+  margin: 0 auto;
+}
+
+.ciw,
+.cit,
+.cis {
+  width: 100%;
+}
+
 .ciw {
   position: relative;
-  padding: 16px;
+  padding: 16px 0;
   margin: 16px 0;
-  background-color: var(--bg-lightgray);
-  border-top: 5px #a09a9a solid;
 }
 .ciw .img-fluid {
   max-width: 100%;
+  filter: sepia(5%) grayscale(0) contrast(1) opacity(0.9);
+  mix-blend-mode: multiply;
+}
+
+.cis {
+  padding: 0 20px;
+}
+.cis .img-transcript {
+  padding: 0 16px;
+  white-space: pre-wrap;
+  text-align: left;
+  line-height: 2;
+}
+.cis .img-transcript::before {
+  border-top: 2px solid var(--dark);
+  content: "";
+  width: 90%;
+  height: 7px;
+  display: block;
+  margin: 0 auto;
+}
+
+.cit {
+  text-align: center;
+}
+.cit .title-fluid {
+  font-family: "Playfair Display", serif;
+  font-size: 40px;
+}
+.cit .content-img--date::before {
+  border-top: 1px solid #2f2f2f;
+  content: "";
+  width: 100px;
+  height: 7px;
+  display: block;
+  margin: 0 auto;
+}
+.cit .content-img--date::after {
+  border-bottom: 1px solid #2f2f2f;
+  content: "";
+  width: 100px;
+  height: 10px;
+  display: block;
+  margin: 0 auto;
 }

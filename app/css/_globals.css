@@ -43,14 +43,7 @@ body {
   .site-container,
   .content-container,
   .content--wrapper {
-    max-width: 1366px;
-    margin: 0 auto;
-  }
-}
-@media (min-width: 1200px) {
-  .content-container,
-  .content--wrapper {
-    max-width: 1140px;
+    max-width: 1900px;
     margin: 0 auto;
   }
 }

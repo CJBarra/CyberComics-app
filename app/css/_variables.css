@@ -1,7 +1,9 @@
 :root {
   --bg-ivory: #fdfdf9; /* Ivory */
-  --bg-lightgray: #e4e4e4; /* Light Grey */
+  --bg-paper: #f9f7f1; /* Paper eggshell */
+  --bg-lightgray: #e4e4e480; /* Light Grey */
   --blue: #3e92b1; /* Blue Grotto */
+  --dark: #2f2f2f; /* Dark Grey */
   --blue-dark: #030322; /* Dark Blue */
   --contrast-red: #e34234; /* Cinnabar */
 }

@@ -42,8 +42,21 @@ class RequestAPI {
     this.getLatestContent();
     this.eventManager();
   }
+  
+  // Event Manager for content navigation controllers, aka buttons.
+  eventManager() {
+    controls.random.addEventListener("click", () =>
+      this.getContentById(this.getRandomId())
+    );
+    controls.prev.addEventListener("click", () =>
+      this.getContentById(this.CURRENT_ID - 1)
+    );
+    controls.next.addEventListener("click", () =>
+      this.getContentById(this.CURRENT_ID + 1)
+    );
+  }
 
-  // on page load
+  // Initial Fetch to API on page load
   // display the current latest comic added to json file on screen
   getLatestContent() {
     const urlRequest = `${this.CORS_PROXY}/${this.API_URL}/${this.API_URL_FORMAT}`;
@@ -66,18 +79,6 @@ class RequestAPI {
       });
   }
 
-  // Event Manager for content navigation controllers, aka buttons.
-  eventManager() {
-    controls.random.addEventListener("click", () =>
-      this.getContentById(this.getRandomId())
-    );
-    controls.prev.addEventListener("click", () =>
-      this.getContentById(this.CURRENT_ID - 1)
-    );
-    controls.next.addEventListener("click", () =>
-      this.getContentById(this.CURRENT_ID + 1)
-    );
-  }
 
   // GETS
   getContentById(id) {
@@ -94,7 +95,8 @@ class RequestAPI {
         image_context.image_loader.setAttribute("src", `${data.img}`);
         image_context.image_loader.setAttribute("alt", `${data.alt}`);
 
-        image_context.image_transcript.innerHTML = `${data.transcript}`; //needs formatting
+        const regex = /(?:<<|>>)/gmi; // Regular expression used to format sound effects in transcript
+        image_context.image_transcript.innerHTML = `${data.transcript.replace(regex, ' * ')}`; 
         
         this.setCurrentIdNumber(data.num);
         console.log(JSON.stringify(data));
@@ -119,7 +121,7 @@ class RequestAPI {
   setMaxIdNumber(num) {
     this.MAX_ID_NUM = num;
   }
-}
+} // Request_API class
 
 function ResponseStatus(res) {
   if (res.status >= 200 && res.status < 300) {
@@ -133,4 +135,6 @@ function json(res) {
   return res.json();
 }
 
+var ref = location.hostname;
+console.log(ref)
 const requestOnLoad = new RequestAPI();
