@@ -7,13 +7,15 @@
 // Those files contain, in a plaintext and easily-parsed format: comic titles,
 // URLs, post dates, transcripts (when available), and other metadata. 
 */
+
 /*
- Author: Christian Barratt,
- Description: Case Study - Create and host a web server on Heroku,
- using javascript only. Vanilla css must also be used for Frontend.
- 
- live url: https://dry-ravine-90752.herokuapp.com/
-  */
+// CORS ANYWHERE GIT REPO:
+// https://github.com/Rob--W/cors-anywhere.git
+// this repo creates a proxy server via Heroku, 
+// this prevents requests to the xkcd API from throwing
+// 'no-cors' errors
+*/
+
 // Here is the Controller class for making requests to the API.
 // API_URL and FORMAT required separating to account for queries
 // involving specific IDs of comics.
@@ -21,7 +23,11 @@
 // 'https://xkcd.com/info.0.json (current comic)'
 // which only displays the latest comic uploaded to the json file, to
 // '...//xkcd.com/1626/info.0.json' )
-class RequestAPI {
+
+import { ResponseStatus, json, setControlVisibility } from "./helpers.js";
+
+
+export default class RequestAPI {
   constructor() {
     // Heroku proxy server needed to bypass CORS
     this.CORS_PROXY = "https://fierce-beach-79817.herokuapp.com";
@@ -36,10 +42,10 @@ class RequestAPI {
       prev: document.getElementById("btn-prev"),
       random: document.getElementById("btn-random"),
       btn_collapse: document.getElementById("script-collapse"),
+      loader: document.getElementById("loader"),
     };
 
     this.image_context = {
-      loader: document.getElementById("loader"),
       image_canvas: document.getElementById("content-canvas"),
       image_source: document.getElementById("img-src"),
       image_title: document.getElementById("img-title"),
@@ -56,12 +62,12 @@ class RequestAPI {
     this.controls.random.addEventListener("click", () =>
       this.getContentById(this.getRandomId())
     );
-    this.controls.prev.addEventListener("click", () =>
-      this.getContentById(this.CURRENT_ID - 1)
-    );
-    this.controls.next.addEventListener("click", () =>
-      this.getContentById(this.CURRENT_ID + 1)
-    );
+    this.controls.prev.addEventListener("click", () => {
+      this.getContentById(this.CURRENT_ID - 1);
+    });
+    this.controls.next.addEventListener("click", () => {
+      this.getContentById(this.CURRENT_ID + 1);
+    });
 
     this.controls.btn_collapse.addEventListener("click", () => {
       this.controls.btn_collapse.classList.toggle("active");
@@ -75,7 +81,11 @@ class RequestAPI {
     });
   }
 
+  // Generates the content data from API request and,
+  // appends to children of 'content-canvas' div
   generateContent(data) {
+    this.setCurrentIdNumber(data.num);
+
     this.image_context.image_title.innerHTML = `${data.safe_title}`;
     this.image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
 
@@ -83,15 +93,21 @@ class RequestAPI {
     this.image_context.image_source.setAttribute("alt", `${data.alt}`);
 
     var length = `${data.transcript}`.length;
+    var msg = "Sorry, we don't have a transcript for that one yet."
 
-    if (length > 0) {
+    // checks for length of transcript array in json, display or throw default msg
+    if (length > 0) { 
       this.image_context.image_transcript.innerHTML = `${data.transcript.replace(
         this.REGEX,
         " * "
       )}`;
     } else {
-      this.image_context.image_transcript.innerHTML = `<p>Sorry, we don't have a transcript for that one yet.</p>`;
+      this.image_context.image_transcript.innerHTML = `<p>${msg}</p>`;
     }
+
+    setControlVisibility(this.CURRENT_ID, this.MAX_ID_NUM);
+
+    this.image_context.image_canvas.classList.add("flex");
   }
 
   // Initial Fetch to API on page load
@@ -102,18 +118,17 @@ class RequestAPI {
       .then(ResponseStatus)
       .then(json)
       .then((data) => {
-        this.generateContent(data);
-
-        this.setCurrentIdNumber(data.num);
         this.setMaxIdNumber(data.num);
-
-        this.image_context.image_canvas.classList.add("flex");
+        this.generateContent(data);
       })
       .catch((err) => {
         console.log("Error occured while loading image..", err);
       });
 
-    this.image_context.loader.classList.add("d-none");
+    if (this.CURRENT_ID === this.MAX_ID_NUM) {
+      this.controls.next.hidden = true;
+    }
+    this.controls.loader.classList.add("d-none");
   }
 
   // GETS
@@ -124,9 +139,8 @@ class RequestAPI {
       .then(ResponseStatus) // Check response status, if fail, throw error code
       .then(json)
       .then((data) => {
-        // generate image content
+        // generate image content by specified id
         this.generateContent(data);
-        this.setCurrentIdNumber(data.num);
       })
       .catch((err) => {
         console.log("Error occured while loading image..", err);
@@ -136,7 +150,10 @@ class RequestAPI {
   getRandomId() {
     const min = 1;
     const max = this.MAX_ID_NUM;
+
+    // Generate random id to be inclusive at min / max values
     const ran = Math.floor(Math.random() * (max - min + 1)) + min;
+
     return ran;
   }
 
@@ -149,17 +166,5 @@ class RequestAPI {
     this.MAX_ID_NUM = num;
   }
 } // Request_API class
-
-function ResponseStatus(res) {
-  if (res.status >= 200 && res.status < 300) {
-    return Promise.resolve(res);
-  } else {
-    return Promise.reject(new Error(res.status));
-  }
-}
-
-function json(res) {
-  return res.json();
-}
 
 const requestOnLoad = new RequestAPI();
