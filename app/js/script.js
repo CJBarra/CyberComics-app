@@ -69,31 +69,35 @@ class RequestAPI {
     });
   }
 
+  generateContent(data) {
+    this.image_context.image_title.innerHTML = `${data.safe_title}`;
+    this.image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
+
+    this.image_context.image_source.setAttribute("src", `${data.img}`);
+    this.image_context.image_source.setAttribute("alt", `${data.alt}`);
+
+    var length = `${data.transcript}`.length;
+
+    if (length > 0) {
+      this.image_context.image_transcript.innerHTML = `${data.transcript.replace(
+        this.REGEX,
+        " * "
+      )}`;
+    } else {
+      this.image_context.image_transcript.innerHTML = `<p>Sorry, we don't have a transcript for that one yet.</p>`;
+    }
+  }
+
   // Initial Fetch to API on page load
   // display the current latest comic added to json file on screen
   getLatestContent() {
     const urlRequest = `${this.CORS_PROXY}/${this.API_URL}/${this.API_URL_FORMAT}`;
-
     fetch(urlRequest)
       .then(ResponseStatus)
       .then(json)
       .then((data) => {
-        this.image_context.image_title.innerHTML = `${data.safe_title}`;
-        this.image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
+        this.generateContent(data);
 
-        this.image_context.image_source.setAttribute("src", `${data.img}`);
-        this.image_context.image_source.setAttribute("alt", `${data.alt}`);
-
-        var length = `${data.transcript}`.length;
-
-        if (length > 0) {
-          this.image_context.image_transcript.innerHTML = `${data.transcript.replace(
-            this.REGEX,
-            " * "
-          )}`;
-        } else {
-          this.image_context.image_transcript.innerHTML = `<p>Sorry, we don't have a transcript for that one yet.</p>`;
-        }
         this.setCurrentIdNumber(data.num);
         this.setMaxIdNumber(data.num);
 
@@ -103,7 +107,7 @@ class RequestAPI {
         console.log("Error occured while loading image..", err);
       });
 
-      this.image_context.loader.classList.add('d-none');
+    this.image_context.loader.classList.add("d-none");
   }
 
   // GETS
@@ -115,23 +119,7 @@ class RequestAPI {
       .then(json)
       .then((data) => {
         // generate image content
-        this.image_context.image_title.innerHTML = `${data.safe_title}`;
-        this.image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
-
-        this.image_context.image_source.setAttribute("src", `${data.img}`);
-        this.image_context.image_source.setAttribute("alt", `${data.alt}`);
-
-        var length = `${data.transcript}`.length;
-
-        if (length > 0) {
-          this.image_context.image_transcript.innerHTML = `${data.transcript.replace(
-            this.REGEX,
-            " * "
-          )}`;
-        } else {
-          this.image_context.image_transcript.innerHTML = `<p>Sorry, we don't have a transcript for that one yet.</p>`;
-        }
-
+        this.generateContent(data);
         this.setCurrentIdNumber(data.num);
       })
       .catch((err) => {

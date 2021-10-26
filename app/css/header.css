@@ -13,13 +13,14 @@
 
 .header--wrapper a {
   text-decoration: none;
+  margin-left: auto;
 }
 
 .navbar {
   font-family: 'Newsreader';
   padding: 0 24px;
   margin-bottom: 32px;
-  border-bottom: 1px var(--bg-lightgray) solid;
+  border-bottom: 2px var(--dark) solid;
 }
 
 .navbar h1 {
