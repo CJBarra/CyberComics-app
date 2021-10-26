@@ -7,7 +7,13 @@
 // Those files contain, in a plaintext and easily-parsed format: comic titles,
 // URLs, post dates, transcripts (when available), and other metadata. 
 */
-
+/*
+ Author: Christian Barratt,
+ Description: Case Study - Create and host a web server on Heroku,
+ using javascript only. Vanilla css must also be used for Frontend.
+ 
+ live url: https://dry-ravine-90752.herokuapp.com/
+  */
 // Here is the Controller class for making requests to the API.
 // API_URL and FORMAT required separating to account for queries
 // involving specific IDs of comics.
