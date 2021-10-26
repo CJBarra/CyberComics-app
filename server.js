@@ -8,7 +8,7 @@ app.use(express.static(__dirname));
 
 // SET routes, on app load send a request and respond by rendering FRONTEND from index.
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("/index");
 });
 
 app.listen(port, () => {
