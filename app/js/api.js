@@ -41,6 +41,9 @@ export default class RequestAPI {
             prev: document.getElementById('btn-prev'),
             random: document.getElementById('btn-random'),
             btn_collapse: document.getElementById('script-collapse'),
+            find: document.getElementById('btn-form'),
+            form: document.getElementById('form-search'),
+            form_input: document.getElementById('search-input'),
         };
 
         this.image_context = {
@@ -74,7 +77,6 @@ export default class RequestAPI {
         if (this.CURRENT_ID === this.MAX_ID_NUM) {
             this.controls.next.hidden = true;
         }
-
     }
 
     // Generates the content data from API request and,
@@ -82,7 +84,7 @@ export default class RequestAPI {
     generateContent(data) {
         this.setCurrentIdNumber(data.num);
 
-        this.image_context.image_id.innerHTML = `${this.CURRENT_ID} /${this.MAX_ID_NUM}`
+        this.image_context.image_id.innerHTML = `${this.CURRENT_ID} /${this.MAX_ID_NUM}`;
         this.image_context.image_title.innerHTML = `${data.safe_title}`;
         this.image_context.image_date.innerHTML = `created: ${data.year}/${data.month}/${data.day}`;
 
@@ -132,6 +134,24 @@ export default class RequestAPI {
         return ran;
     }
 
+    findContentById(ev) {
+        ev.preventDefault();
+
+        const query = this.controls.form_input.value;
+
+        if (!query || query === '') return;
+
+        if (query < 1 || query > this.MAX_ID_NUM) {
+            return document
+                .getElementById('ccp')
+                .innerHTML(
+                    `<p></p>An error has occured. Try a number between 1 and ${this.MAX_ID_NUM}</p> `
+                );
+        }
+
+        this.getContentById(query);
+    }
+
     // Event Manager for content navigation controllers, aka buttons.
     eventManager() {
         this.controls.prev.addEventListener('click', () => {
@@ -154,6 +174,8 @@ export default class RequestAPI {
                 context.style.maxHeight = context.scrollHeight + 'px';
             }
         });
+
+        this.controls.form.addEventListener('submit', ev => this.findContentById(ev));
     }
 
     // SETS
