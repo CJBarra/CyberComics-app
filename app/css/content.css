@@ -85,7 +85,7 @@
   color: var(--dark);
   font-size: 14px;
 }
-.cit span::before {
+.cit .content-img--date::before {
   border-top: 1px solid #2f2f2f;
   content: "";
   width: 100px;
@@ -93,7 +93,7 @@
   display: block;
   margin: 0 auto;
 }
-.cit span::after {
+.cit .content-img--date::after {
   border-bottom: 1px solid #2f2f2f;
   content: "";
   width: 100px;
