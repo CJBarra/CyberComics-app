@@ -101,8 +101,11 @@
   display: block;
   margin: 0 auto;
 }
+.img-id{
+  padding: 0;
+}
 
-/* CONTENT IMAGE STYLING */
+/* CONTENT IMAGE WRAP STYLING */
 .ciw {
   position: relative;
   padding: 16px 0;
