@@ -8,14 +8,6 @@
 // URLs, post dates, transcripts (when available), and other metadata. 
 */
 
-/*
-// CORS ANYWHERE GIT REPO:
-// https://github.com/Rob--W/cors-anywhere.git
-// this repo creates a Nodejs proxy that adds cors headers to proxied requests.
-// In this case, the request to the xkcd API. This prevents the request throwing  
-// a 'no-cors' mode error.
-*/
-
 // Here is the Controller class for making requests to the API.
 // API_URL and FORMAT required separating to account for queries
 // involving specific IDs of comics.
